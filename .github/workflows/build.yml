@@ -38,8 +38,8 @@ jobs:
           cache: maven
           # writes settings.xml with server "github" (repository id in pom.xml)
           server-id: github
-          server-username: GITHUB_ACTOR
-          server-password: GITHUB_TOKEN
+          server-username-env-var: GITHUB_ACTOR
+          server-password-env-var: GITHUB_TOKEN
 
       - name: Build and test
         run: mvn -B -ntp verify
