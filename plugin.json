@@ -1,0 +1,36 @@
+{
+  "name": "table-detector",
+  "version": "1.0.3",
+  "description": "Universal table detection framework with pluggable format backends",
+  "author": "CassandraGargoyle Team",
+  "license": "MIT",
+  "plugin": {
+    "type": "helper",
+    "binary": "table-detector-1.0.3.jar",
+    "runtime": "java",
+    "runtime_version": ">=21",
+    "jvm_args": ["-Xmx256m", "-Xms64m"],
+    "interfaces": ["cli"]
+  },
+  "dependencies": {
+    "portunix_min_version": "1.10.0",
+    "os_support": ["linux", "windows", "darwin"]
+  },
+  "commands": [
+    {
+      "name": "detect",
+      "description": "Detect tables in documents",
+      "options": [
+        {"flag": "-p, --page", "description": "Page number (0 = all pages)"},
+        {"flag": "-c, --min-confidence", "description": "Minimum confidence threshold (0.0-1.0)"},
+        {"flag": "-f, --format", "description": "Output format: json, markdown"},
+        {"flag": "-v, --verbose", "description": "Verbose output"}
+      ]
+    }
+  ],
+  "ai_integration": {
+    "mcp_tools": [
+      {"name": "detect_tables", "description": "Detect tables in PDF documents"}
+    ]
+  }
+}

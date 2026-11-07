@@ -1,0 +1,80 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) CassandraGargoyle Community Project
+
+# Release on a vX.Y.Z tag: Maven artifacts to GitHub Packages, Portunix plugin to GitHub Releases
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          # writes settings.xml with server "github" (repository and distributionManagement id)
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+
+      # The release version is the pom.xml version without -SNAPSHOT
+      - name: Strip SNAPSHOT versions
+        run: find . -name pom.xml -not -path '*/target/*' -exec sed -i 's/-SNAPSHOT//g' {} +
+
+      # A tag that does not match pom.xml and plugin.json is a mistake, fail instead of publishing
+      - name: Verify tag matches versions
+        id: version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          POM_VERSION=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
+          PLUGIN_VERSION=$(jq -r .version plugin.json)
+          echo "tag=$TAG_VERSION pom=$POM_VERSION plugin.json=$PLUGIN_VERSION"
+          if [ "$TAG_VERSION" != "$POM_VERSION" ] || [ "$TAG_VERSION" != "$PLUGIN_VERSION" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match pom.xml ($POM_VERSION) and plugin.json ($PLUGIN_VERSION)"
+            exit 1
+          fi
+          echo "version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Build and test
+        run: mvn -B -ntp verify
+
+      - name: Publish to GitHub Packages
+        run: mvn -B -ntp deploy -DskipTests
+
+      - name: Distribution package
+        run: |
+          make dist
+          cd dist
+          sha256sum * > SHA256SUMS
+
+      - name: Create GitHub Release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          --title "table-detector $VERSION"
+          --generate-notes
+          dist/table-detector-$VERSION.jar dist/plugin.json dist/README.md dist/SHA256SUMS

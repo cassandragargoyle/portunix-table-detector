@@ -1,0 +1,16 @@
+{
+  // Line length: 120 chars, ignore tables and code blocks
+  "MD013": {
+    "line_length": 120,
+    "tables": false,
+    "code_blocks": false
+  },
+  // Changelogs repeat Added/Changed headings under each version
+  "MD024": {
+    "siblings_only": true
+  },
+  // Allow hard tabs inside code blocks (Java/Go code style uses tabs)
+  "MD010": {
+    "code_blocks": false
+  }
+}

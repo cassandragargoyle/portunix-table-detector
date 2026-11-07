@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.cassandragargoyle.portunix</groupId>
+		<artifactId>table-detector-parent</artifactId>
+		<version>1.0.3-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>table-detector-api</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Portunix Table Detector - API</name>
+	<description>Core interfaces and shared models for table detection</description>
+
+	<dependencies>
+		<!-- CassandraGargoyle API for logging and small utilities -->
+		<dependency>
+			<groupId>org.cassandragargoyle</groupId>
+			<artifactId>org-cassandragargoyle-api</artifactId>
+		</dependency>
+
+		<!-- PF4J for ExtensionPoint interface -->
+		<dependency>
+			<groupId>org.pf4j</groupId>
+			<artifactId>pf4j</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Jackson annotations for JSON serialization -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.cassandragargoyle.portunix</groupId>
+	<artifactId>table-detector-parent</artifactId>
+	<version>1.0.3-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Portunix Table Detector - Parent</name>
+	<description>Universal table detection framework with pluggable format backends</description>
+	<url>https://github.com/cassandragargoyle/portunix-table-detector</url>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/cassandragargoyle/portunix-table-detector</url>
+		<connection>scm:git:https://github.com/cassandragargoyle/portunix-table-detector.git</connection>
+	</scm>
+
+	<modules>
+		<module>table-detector-api</module>
+		<module>table-detector-core</module>
+		<module>table-detector-pdf</module>
+	</modules>
+
+	<properties>
+		<!-- Java version -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Dependency versions -->
+		<cassandragargoyle-api.version>1.1.0</cassandragargoyle-api.version>
+		<jackson.version>2.21.2</jackson.version>
+		<pdfbox.version>3.0.7</pdfbox.version>
+		<pf4j.version>3.15.0</pf4j.version>
+		<picocli.version>4.7.7</picocli.version>
+		<junit.version>6.1.1</junit.version>
+		<jacoco.version>0.8.16</jacoco.version>
+		<maven.compiler.release>21</maven.compiler.release>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Internal modules -->
+			<dependency>
+				<groupId>org.cassandragargoyle.portunix</groupId>
+				<artifactId>table-detector-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.cassandragargoyle.portunix</groupId>
+				<artifactId>table-detector-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.cassandragargoyle.portunix</groupId>
+				<artifactId>table-detector-pdf</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- CassandraGargoyle API -->
+			<dependency>
+				<groupId>org.cassandragargoyle</groupId>
+				<artifactId>org-cassandragargoyle-api</artifactId>
+				<version>${cassandragargoyle-api.version}</version>
+			</dependency>
+
+			<!-- PF4J Plugin Framework -->
+			<dependency>
+				<groupId>org.pf4j</groupId>
+				<artifactId>pf4j</artifactId>
+				<version>${pf4j.version}</version>
+			</dependency>
+
+			<!-- Apache PDFBox -->
+			<dependency>
+				<groupId>org.apache.pdfbox</groupId>
+				<artifactId>pdfbox</artifactId>
+				<version>${pdfbox.version}</version>
+			</dependency>
+
+			<!-- Jackson BOM -->
+			<dependency>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
+				<version>2.22.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- Picocli -->
+			<dependency>
+				<groupId>info.picocli</groupId>
+				<artifactId>picocli</artifactId>
+				<version>${picocli.version}</version>
+			</dependency>
+
+			<!-- Testing -->
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.15.0</version>
+					<configuration>
+						<release>21</release>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.5.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<!-- Coverage report per module in target/site/jacoco -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/cassandragargoyle/api</url>
+		</repository>
+	</repositories>
+
+	<!-- GitHub Packages, same server id "github" as the api repository above -->
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/cassandragargoyle/portunix-table-detector</url>
+		</repository>
+	</distributionManagement>
+
+	<developers>
+		<developer>
+			<id>zdenek</id>
+			<name>Zdenek</name>
+			<roles>
+				<role>lead</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<organization>
+		<name>CassandraGargoyle</name>
+		<url>https://github.com/cassandragargoyle</url>
+	</organization>
+</project>

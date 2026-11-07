@@ -1,0 +1,30 @@
+# Build and distribution output
+dist/
+
+# Java/Maven artifacts
+target/
+*.class
+.m2/
+dependency-reduced-pom.xml
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.swp
+*~
+*.code-workspace
+nbproject/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local-only files
+NOTES.md
+CLAUDE.local.md
+.claude/settings.local.json
+.env*

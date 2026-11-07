@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.cassandragargoyle.portunix</groupId>
+		<artifactId>table-detector-parent</artifactId>
+		<version>1.0.3-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>table-detector-core</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Portunix Table Detector - Core</name>
+	<description>PF4J plugin manager, CLI entry point, and format routing for table detection</description>
+
+	<dependencies>
+		<!-- CassandraGargoyle API for logging and small utilities -->
+		<dependency>
+			<groupId>org.cassandragargoyle</groupId>
+			<artifactId>org-cassandragargoyle-api</artifactId>
+		</dependency>
+
+		<!-- Table detectorAPI module -->
+		<dependency>
+			<groupId>org.cassandragargoyle.portunix</groupId>
+			<artifactId>table-detector-api</artifactId>
+		</dependency>
+
+		<!-- PDF backend (for standalone CLI usage) -->
+		<dependency>
+			<groupId>org.cassandragargoyle.portunix</groupId>
+			<artifactId>table-detector-pdf</artifactId>
+		</dependency>
+
+		<!-- PF4J Plugin Framework -->
+		<dependency>
+			<groupId>org.pf4j</groupId>
+			<artifactId>pf4j</artifactId>
+		</dependency>
+
+		<!-- Picocli for CLI -->
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+		</dependency>
+
+		<!-- PDFBox for PDF loading in CLI -->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+		</dependency>
+
+		<!-- Jackson for JSON output -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Shade Plugin for creating executable fat JAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.6.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+							<shadedClassifierName>standalone</shadedClassifierName>
+							<!-- keep the full dependency list in the published POM of the thin JAR -->
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>org.cassandragargoyle.portunix.tabledetector.core.Main</mainClass>
+								</transformer>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+							</transformers>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

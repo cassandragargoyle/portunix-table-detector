@@ -1,0 +1,48 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) CassandraGargoyle Community Project
+
+name: Build
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# org-cassandragargoyle-api comes from GitHub Packages, which needs a token even for public packages
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          # writes settings.xml with server "github" (repository id in pom.xml)
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
+
+      - name: Build and test
+        run: mvn -B -ntp verify
+
+      - name: Distribution package
+        run: make dist
