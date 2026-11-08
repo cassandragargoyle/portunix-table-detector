@@ -83,6 +83,16 @@ make dist          # Portunix distribution package in dist/
 
 - **GitHub is the single source of truth** for the issue list (status, assignee, labels)
 - Before creating new features, check existing issues on GitHub (`gh issue list`)
+- Long-form write-ups live in `docs/issues/NNN-name.md` (`NNN` = GitHub issue number), archived
+  ones in `docs/issues/done/`, see [docs/issues/README.md](docs/issues/README.md)
+
+### AI Assistant Skills and Roles
+
+- Skills in `.claude/skills/`: `create-issue`, `implement-issue`, `finish-branch`,
+  `bump-version`, `deploy-plugin`, `brainstorm`
+- Roles in `.claude/roles/`, switched with `/role <name>`; the active role is set in the
+  local-only `CLAUDE.local.md` (`@.claude/roles/developer.md`), `implement-issue` requires the
+  Developer role
 
 ### GitHub Workflow
 
