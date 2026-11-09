@@ -236,22 +236,24 @@ the matrix only, the intro line is trimmed as a stray edge row.
 
 ## Regenerating the pictures
 
-The helpers are not public, so [tools/SyntheticPdfSvg.java](../../../../../../../../tools/SyntheticPdfSvg.java)
-(a single-file program outside the Maven sources) calls it by reflection on the compiled test
-class. It needs `pdftocairo` (poppler-utils):
+[SyntheticPdfSvg.java](SyntheticPdfSvg.java) in the same package (see
+[SyntheticPdfSvg.md](SyntheticPdfSvg.md)) calls the package-private factory methods directly. It
+is compiled with the tests but not run by surefire. It needs `pdftocairo` (poppler-utils):
 
 ```bash
+mvn -q install -DskipTests   # once, from the repository root, for table-detector-api
 cd table-detector-pdf
 mvn -q test-compile dependency:build-classpath -Dmdep.outputFile=target/cp.txt
 mkdir -p target/synthetic-pdf
-java -cp "target/test-classes:target/classes:$(cat target/cp.txt)" tools/SyntheticPdfSvg.java target/synthetic-pdf
+java -cp "target/test-classes:target/classes:$(cat target/cp.txt)" \
+  org.cassandragargoyle.portunix.tabledetector.pdf.SyntheticPdfSvg target/synthetic-pdf
 cp target/synthetic-pdf/*.svg src/test/java/org/cassandragargoyle/portunix/tabledetector/pdf/synthetic-pdf/
 ```
 
-For each variant `SyntheticPdfSvg.java`:
+For each variant `SyntheticPdfSvg`:
 
-1. Gets the factory method with `getDeclaredMethod` (`createSyntheticPdf` with its arguments,
-   `createProsePdf` or `createProseWithMatrixPdf`) and calls `setAccessible(true)`
+1. Creates the document with its factory (`createSyntheticPdf` with its arguments,
+   `createProsePdf` or `createProseWithMatrixPdf`)
 2. Saves the document with `PDDocument.save` and runs `PdfTableDetector.detectTables` on it
 3. Converts the PDF with `pdftocairo -svg`, adds the white background and appends one `<rect>` per
    bounding box before `</svg>`
