@@ -107,7 +107,7 @@ class PdfTableDetectorTest
 		return text.codePoints().allMatch(cp -> Character.isWhitespace(cp) || Character.isSpaceChar(cp));
 	}
 
-	private static PDDocument createSyntheticPdf(PDRectangle mediaBox, int rotation, float xOffset, float yTop)	throws IOException
+	static PDDocument createSyntheticPdf(PDRectangle mediaBox, int rotation, float xOffset, float yTop)	throws IOException
 	{
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage(mediaBox);
