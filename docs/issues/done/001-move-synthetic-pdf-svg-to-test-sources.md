@@ -5,10 +5,11 @@
 `table-detector-pdf/tools/SyntheticPdfSvg.java` lives outside the Maven source layout, so the
 build never compiles it and API changes break it silently. Move it to the test sources.
 
-**Status**: 📋 Open
+**Status**: ✅ Implemented
 **Priority**: Low
 **Component**: `table-detector-pdf`
 **Created**: 2026-11-08
+**Closed**: 2026-11-09
 **GitHub**: #1
 
 ## Problem Description
